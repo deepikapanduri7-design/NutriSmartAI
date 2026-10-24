@@ -318,6 +318,8 @@ if analysis is not None:
 
     st.divider()
     st.header("🔎 AI Recognition Result")
+    st.write("DEBUG: Analysis type:", type(analysis))
+    st.write("DEBUG: Analysis content:", analysis)
 
     if not isinstance(analysis, dict):
         st.error("Invalid AI response.please upload the image again")

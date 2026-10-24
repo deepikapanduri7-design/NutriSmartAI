@@ -318,116 +318,60 @@ if analysis is not None:
 
     st.divider()
     st.header("🔎 AI Recognition Result")
-    st.write("DEBUG: Analysis type:", type(analysis))
-    st.write("DEBUG: Analysis content:", analysis)
-
     if not isinstance(analysis, dict):
-        st.error("Invalid AI response.please upload the image again")
-    elif not analysis.get("is_food",False):    
+        st.error("Invalid AI response. Please upload the image again.")
 
+    elif not analysis.get("is_food", False):
         st.warning(
             "The image was not identified as food. "
             "Please upload a clear food image and try again."
         )
-else:
+ else:
+        st.success("Food identified successfully!")
 
-        food_name = analysis.get(
-            "food_name",
-            "Unknown food"
-        )
+        # Food details
+        st.subheader(f"🍽️ Food Name: {analysis.get('food_name', 'Unknown')}")
+        st.write("**Confidence:**", analysis.get("confidence", "Unknown"))
+        st.write("**Description:**", analysis.get("description", "Not available"))
 
-        confidence = analysis.get(
-            "confidence",
-            "low"
-        )
+        # Nutrition information
+        nutrition = analysis.get("nutrition_per_100g", {})
 
-        st.success(f"Identified food: {food_name}")
+        st.subheader("🥗 Nutrition per 100 g")
 
-        st.write(
-            f"**AI confidence:** {confidence}"
-        )
+        col1, col2, col3, col4 = st.columns(4)
 
-        st.write(
-            analysis.get("description", "")
-        )
+        with col1:
+            st.metric("Calories", f"{nutrition.get('calories', 0)} kcal")
 
-        if str(confidence).lower() == "low":
-            st.warning(
-                "The identification is uncertain. "
-                "Please verify the food name before using "
-                "the nutrition estimates."
-            )
+        with col2:
+            st.metric("Protein", f"{nutrition.get('protein', 0)} g")
 
-        # ==========================================
-        # NUTRITION CALCULATION
-        # ==========================================
+        with col3:
+            st.metric("Carbohydrates", f"{nutrition.get('carbs', 0)} g")
 
-        st.divider()
-        st.header("📊 Nutrition Analysis")
+        with col4:
+            st.metric("Fat", f"{nutrition.get('fat', 0)} g")
 
-        quantity = st.number_input(
-            "Enter the estimated edible portion in grams:",
-            min_value=1,
-            max_value=5000,
-            value=100,
-            step=10,
-            key="food_quantity"
-        )
+        # Healthier alternatives
+        st.subheader("💚 Healthier Alternatives")
 
-        nutrition = analysis.get(
-            "nutrition_per_100g",
-            {}
-        )
+        alternatives = analysis.get("healthier_alternatives", [])
 
-        try:
-            calories = float(nutrition["calories"])
-            protein = float(nutrition["protein"])
-            carbs = float(nutrition["carbs"])
-            fat = float(nutrition["fat"])
+        if alternatives:
+            for food in alternatives:
+                st.write(f"✅ {food}")
+        else:
+            st.info("No alternatives available.")
 
-            factor = quantity / 100
+        # Nutrition note
+        note = analysis.get("nutrition_note", "")
 
-            calories *= factor
-            protein *= factor
-            carbs *= factor
-            fat *= factor
-
-            col1, col2, col3, col4 = st.columns(4)
-
-            col1.metric(
-                "Calories",
-                f"{calories:.1f} kcal"
-            )
-
-            col2.metric(
-                "Protein",
-                f"{protein:.1f} g"
-            )
-
-            col3.metric(
-                "Carbohydrates",
-                f"{carbs:.1f} g"
-            )
-
-            col4.metric(
-                "Fat",
-                f"{fat:.1f} g"
-            )
-
-            st.caption(
-                "These are AI-generated estimates, not "
-                "laboratory measurements. Actual nutrition "
-                "depends on ingredients, preparation, and "
-                "portion size."
-            )
-
-        except (KeyError, TypeError, ValueError):
-            st.warning(
-                "Reliable nutrition estimates are unavailable "
-                "for this image."
-            )
+        if note:
+            st.info(f"💡 Nutrition Tip: {note}")
 
 
+    
         # ==========================================
         # STEP 4: HEALTHIER ALTERNATIVES
         # ==========================================

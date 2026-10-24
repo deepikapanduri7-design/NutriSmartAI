@@ -314,12 +314,14 @@ if st.button("🤖 Analyse My Image", type="primary"):
 # =======================================
     analysis = st.session_state.get("food_analysis")
 
-if st.session_state.get("food_analysis"):
+if analysis is not None:
 
     st.divider()
     st.header("🔎 AI Recognition Result")
 
-    if not analysis.get("is_food", False):
+    if not isinstance(analysis, dict):
+        st.error("Invalid AI response.please upload the image again")
+    elif not analysis.get("is_food",False):    
 
         st.warning(
             "The image was not identified as food. "

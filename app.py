@@ -326,7 +326,7 @@ if analysis is not None:
             "The image was not identified as food. "
             "Please upload a clear food image and try again."
         )
- else:
+else:
         st.success("Food identified successfully!")
 
         # Food details

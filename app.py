@@ -326,8 +326,10 @@ if analysis is not None:
             "The image was not identified as food. "
             "Please upload a clear food image and try again."
         )
-else:
+    else:
         st.success("Food identified successfully!")
+        st.write("### Food Details")
+        for key, value in analysis.items(): st.write(f"**{key.replace('_', ' ').title()}:** {value}")
 
         # Food details
         st.subheader(f"🍽️ Food Name: {analysis.get('food_name', 'Unknown')}")

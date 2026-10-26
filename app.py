@@ -377,7 +377,7 @@ if analysis is not None:
         # ==========================================
         # STEP 4: HEALTHIER ALTERNATIVES
         # ==========================================
-
+        food_name=analysis.get("food_name",Unknown food")
         st.divider()
         st.header("💚 Healthier Twin Food Finder")
 
